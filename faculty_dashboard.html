@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Faculty Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>All Submissions</h3>
+  <form method="post" action="{{ url_for('analysis.run') }}">
+    <button class="btn btn-warning">Run AI Similarity</button>
+  </form>
+</div>
+
+<div class="card glass mb-4">
+  <div class="card-body">
+    <table class="table table-dark table-striped align-middle">
+      <thead><tr><th>Title</th><th>Student</th><th>Dept</th><th>Status</th><th>Grade</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for s in submissions %}
+        <tr>
+          <td>{{ s.title }}</td>
+          <td>{{ s.student_id }}</td>
+          <td>{{ s.department }}</td>
+          <td>{{ s.status }}</td>
+          <td>{{ s.grade or '-' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('main.feedback', assign_id=s._id) }}" class="d-flex gap-2">
+              <select name="status" class="form-select form-select-sm">
+                <option {{ 'selected' if s.status=='Pending' }}>Pending</option>
+                <option {{ 'selected' if s.status=='Seen' }}>Seen</option>
+                <option {{ 'selected' if s.status=='Approved' }}>Approved</option>
+                <option {{ 'selected' if s.status=='Rejected' }}>Rejected</option>
+              </select>
+              <input type="text" name="grade" class="form-control form-control-sm" placeholder="Grade" value="{{ s.grade or '' }}">
+              <input type="text" name="feedback" class="form-control form-control-sm" placeholder="Feedback" value="{{ s.feedback or '' }}">
+              <button class="btn btn-sm btn-primary">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-secondary">No submissions found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h5 class="mb-2">Recent AI Runs</h5>
+<div class="card glass">
+  <div class="card-body">
+    <table class="table table-dark table-striped align-middle">
+      <thead><tr><th>When</th><th>Summary</th><th>Report</th></tr></thead>
+      <tbody>
+        {% for l in sim_logs %}
+        <tr>
+          <td>{{ l.created_at }}</td>
+          <td>High: {{ l.summary.high }}, Moderate: {{ l.summary.moderate }}, Low: {{ l.summary.low }}, Clusters: {{ l.summary.clusters }}</td>
+          <td><a class="btn btn-sm btn-outline-light" href="{{ url_for('analysis.report', log_id=l._id) }}">Download PDF</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-secondary">No analysis logs yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

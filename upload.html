@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Upload Assignment{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card glass">
+      <div class="card-body">
+        <h4 class="mb-3">Upload Assignment</h4>
+        <form method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Department</label>
+            <input type="text" name="department" class="form-control" value="CSE">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Choose File (PDF/DOCX)</label>
+            <input type="file" name="file" class="form-control" accept=".pdf,.docx" required>
+          </div>
+          <button class="btn btn-success">Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

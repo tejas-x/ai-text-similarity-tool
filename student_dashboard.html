@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Your Submissions</h3>
+  <a class="btn btn-success" href="{{ url_for('main.upload') }}">Upload Assignment</a>
+</div>
+<div class="card glass">
+  <div class="card-body">
+    <table class="table table-dark table-striped align-middle">
+      <thead><tr><th>Title</th><th>Status</th><th>Grade</th><th>Feedback</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for s in submissions %}
+        <tr>
+          <td>{{ s.title }}</td>
+          <td>
+            {% if s.status == 'Approved' %}<span class="badge bg-success">Approved</span>
+            {% elif s.status == 'Rejected' %}<span class="badge bg-danger">Rejected</span>
+            {% elif s.status == 'Seen' %}<span class="badge bg-info">Seen</span>
+            {% else %}<span class="badge bg-secondary">{{ s.status }}</span>{% endif %}
+          </td>
+          <td>{{ s.grade or '-' }}</td>
+          <td>{{ s.feedback or '-' }}</td>
+          <td>
+            <a class="btn btn-sm btn-outline-light" href="{{ url_for('main.download', assign_id=s._id) }}">Download</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-secondary">No submissions yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
